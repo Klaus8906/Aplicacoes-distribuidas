@@ -24,7 +24,7 @@ public class OrderProducer {
         System.out.println("Qual o preco desta acao");
         String preco = s.nextLine();
 
-        String orderMessage = "<"+acao+";"+codigo+";"+quantidade+";"+preco+">";
+        String orderMessage = "<"+acao+"."+codigo+";"+quantidade+";"+preco+">";
 
         try {
             RabbitMQConnection rabbitMQConnection = new RabbitMQConnection(rabbitMqServerAddress, 5672, "enzvwect", "3zMCaXyufH92EvroBPRjzj-qYzZrr8Re", "enzvwect");

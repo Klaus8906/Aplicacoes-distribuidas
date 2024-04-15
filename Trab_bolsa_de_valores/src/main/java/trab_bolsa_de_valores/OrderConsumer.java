@@ -39,10 +39,10 @@ public class OrderConsumer {
             OrderBook orderBook = new OrderBook();
 
             // Processar a ordem baseado no seu tipo
-            if (message.contains("COMPRA")) {
+            if (message.contains("compra")) {
                 // lógica para processar uma ordem de compra
                 orderBook.addBuyOrder(order);
-            } else if (message.contains("VENDA")) {
+            } else if (message.contains("venda")) {
                 // lógica para processar uma ordem de venda
                 orderBook.addSellOrder(order);
             }
