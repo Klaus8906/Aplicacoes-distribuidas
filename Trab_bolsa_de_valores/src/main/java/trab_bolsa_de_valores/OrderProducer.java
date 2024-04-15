@@ -12,7 +12,7 @@ public class OrderProducer {
         String rabbitMqServerAddress = "gull.rmq.cloudamqp.com"; // Passe o endereço como argumento
         Scanner s = new Scanner(System.in);
 
-        System.out.println("Deseja comprar ou vender");
+        System.out.println("Deseja realizar compra ou venda");
         String acao = s.nextLine();
 
         System.out.println("Qual a acao");

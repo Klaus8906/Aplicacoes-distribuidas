@@ -45,6 +45,8 @@ public class OrderConsumer {
             } else if (message.contains("venda")) {
                 // lógica para processar uma ordem de venda
                 orderBook.addSellOrder(order);
+            } else {
+                System.out.println("ERRO so e possivel realizar compra ou venda");
             }
             };
 
