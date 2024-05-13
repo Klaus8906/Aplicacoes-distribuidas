@@ -11,7 +11,9 @@ public class OrderConsumer {
         String rabbitMqServerAddress = "gull.rmq.cloudamqp.com"; // Passe o endereço como argumento
 
         try {
-            RabbitMQConnection rabbitMQConnection = new RabbitMQConnection(rabbitMqServerAddress, 5672, "enzvwect", "3zMCaXyufH92EvroBPRjzj-qYzZrr8Re", "enzvwect");
+            RabbitMQConnection rabbitMQConnection = new RabbitMQConnection(rabbitMqServerAddress, 5672,
+             "enzvwect", "3zMCaXyufH92EvroBPRjzj-qYzZrr8Re", "enzvwect");
+             
             Connection connection = rabbitMQConnection.createConnection();
 
             // Crie um canal

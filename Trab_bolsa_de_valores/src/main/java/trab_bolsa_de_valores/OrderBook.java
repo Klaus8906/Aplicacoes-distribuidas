@@ -2,6 +2,7 @@ package trab_bolsa_de_valores;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 public class OrderBook {
     private List<Order> buyOrders; // Ordens de compra
@@ -23,30 +24,22 @@ public class OrderBook {
     }
 
     private void matchOrders() {
-        // Percorra as ordens de compra e venda
-        for (Order buyOrder : buyOrders) {
-            for (Order sellOrder : sellOrders) {
-                if (buyOrder.getSymbol().equals(sellOrder.getSymbol())) {
-                    // Verifique se o preço da ordem de venda é menor ou igual ao preço da ordem de compra
-                    if (sellOrder.getPrice() <= buyOrder.getPrice()) {
-                        // Casamento encontrado! Execute a operação
-                        int quantityToMatch = Math.min(buyOrder.getQuantity(), sellOrder.getQuantity());
-
-                        // Atualize as quantidades nas ordens
-                        buyOrder.setQuantity(buyOrder.getQuantity() - quantityToMatch);
-                        sellOrder.setQuantity(sellOrder.getQuantity() - quantityToMatch);
-
-                        // Notifique os clientes interessados sobre a operação executada
-                        System.out.println("Ordem executada: " + quantityToMatch + " ações de " + buyOrder.getSymbol() +
-                                " por R$" + buyOrder.getPrice());
-
-                        // Se alguma das ordens ficar com quantidade zero, remova-a do livro de ofertas
-                        if (buyOrder.getQuantity() == 0) {
-                            buyOrders.remove(buyOrder);
-                        }
-                        if (sellOrder.getQuantity() == 0) {
-                            sellOrders.remove(sellOrder);
-                        }
+        Iterator<Order> buyIterator = buyOrders.iterator();
+        while (buyIterator.hasNext()) {
+            Order buyOrder = buyIterator.next();
+            Iterator<Order> sellIterator = sellOrders.iterator();
+            while (sellIterator.hasNext()) {
+                Order sellOrder = sellIterator.next();
+                if (buyOrder.getSymbol().equals(sellOrder.getSymbol()) && sellOrder.getPrice() <= buyOrder.getPrice()) {
+                    int quantityToMatch = Math.min(buyOrder.getQuantity(), sellOrder.getQuantity());
+                    buyOrder.setQuantity(buyOrder.getQuantity() - quantityToMatch);
+                    sellOrder.setQuantity(sellOrder.getQuantity() - quantityToMatch);
+                    System.out.println("Transação: " + quantityToMatch + " de " + buyOrder.getSymbol() + " a R$" + buyOrder.getPrice());
+                    if (buyOrder.getQuantity() == 0) {
+                        buyIterator.remove();
+                    }
+                    if (sellOrder.getQuantity() == 0) {
+                        sellIterator.remove();
                     }
                 }
             }

@@ -1,13 +1,14 @@
 package trab_bolsa_de_valores;
 
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import java.util.Scanner;
 
 public class OrderProducer {
-    private static final String QUEUE_NAME = "BROKER"; // Nome da fila para receber operações dos clientes
-
+    private static final String EXCHANGE_NAME = "BOLSADEVALORES";
     public static void main(String[] args) {
         String rabbitMqServerAddress = "gull.rmq.cloudamqp.com"; // Passe o endereço como argumento
         Scanner s = new Scanner(System.in);
@@ -27,22 +28,20 @@ public class OrderProducer {
         String orderMessage = "<"+acao+"."+codigo+";"+quantidade+";"+preco+">";
 
         try {
-            RabbitMQConnection rabbitMQConnection = new RabbitMQConnection(rabbitMqServerAddress, 5672, "enzvwect", "3zMCaXyufH92EvroBPRjzj-qYzZrr8Re", "enzvwect");
-            Connection connection = rabbitMQConnection.createConnection();
-
-            // Crie um canal
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setUri("your_cloudamqp_url"); // Configure corretamente sua URL
+            Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
 
-            // Declare a fila (caso ainda não exista)
-            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+            channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
 
-            // Envie a mensagem para a fila
-            channel.basicPublish("", QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, orderMessage.getBytes());
+            String routingKey = args[0] + "." + args[1]; // "compra.ABEV3" ou "venda.PETR4"
+            String message = args[2]; // Mensagem formatada com quantidade e preço
 
-            System.out.println("Mensagem enviada: " + orderMessage);
+            channel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes("UTF-8"));
+            System.out.println(" [x] Sent '" + routingKey + "':'" + message + "'");
 
-            // Feche o canal e a conexão
-            channel.close();
+            channel.close();        
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
